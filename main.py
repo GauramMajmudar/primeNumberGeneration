@@ -1,5 +1,5 @@
 from flask import Flask, jsonify # jsonify converts the output in readable generalized json format
-import sqlite3, time
+import db
 from datetime import datetime as dt
 
 #---------------------------------------------------------------------------------------------
@@ -17,7 +17,7 @@ def home():
 
 @app.route('/prime/<int:n1>/<int:n2>', methods = ['GET'])
 def prime(n1, n2):
-    prime_no = []           #list to store the output
+    prime_no = []
     starttime = dt.now()    #recording start time
     if(n1 > 0 and n2 > 0):  #Checking whether the input is greater than 0
         if(n1 >= n2):
@@ -33,19 +33,16 @@ def prime(n1, n2):
             
             
             #time.sleep(5) #WITHOUT DELAY THE PROGRAM RETURNS 0 REAL ELAPSED TIME EVEN IN MILLI/MICRO SECONDS
+            
             time_elapsed = dt.strptime(dt.now().strftime("%H:%M:%S.%f"), "%H:%M:%S.%f") - dt.strptime(starttime.strftime("%H:%M:%S.%f"), "%H:%M:%S.%f")
             #OUTPUT OF ABOVE CODE RESULTS IN DIFFERENCE BETWEEN START AND END TIME OF LOGIC IN TIMEDELTA DATA TYPE
+            
             time_elapsed = str(time_elapsed) #SQLITE DOES NOT SUPPORT TIMEDELTA DATA TYPE
-
             total_values = len(prime_no)
+
+            status = db.insert(starttime, n1, n2, time_elapsed, total_values)
             
-            connection = sqlite3.connect('entry.db') #CONNECTION OBJECT CREATED
-            conn = connection.cursor() #CONNECTION INSTANCE CREATED
-            conn.execute('INSERT INTO prime VALUES (?,?,?,?,?)', (starttime, n1, n2, time_elapsed, total_values))
-            connection.commit() #DATABASE TRANSACTION COMMIT
-            connection.close() #DATABASE CONNECTION CLOSED
-            
-            return jsonify({'range': str(n1)+'-'+str(n2), 'prime_values': prime_no})
+            return jsonify({'range': str(n1)+'-'+str(n2), 'prime_values': prime_no, 'db_status': status})
     else:
         return jsonify({'error':'0 or negative values detected. Please enter values greater than 0'})
 
@@ -53,13 +50,7 @@ def prime(n1, n2):
 
 @app.route('/fetch', methods = ['GET'])
 def fetch():
-    connection = sqlite3.connect('entry.db')
-    conn = connection.cursor()
-
-    conn.execute('SELECT * FROM prime')
-    output = conn.fetchall()
-    connection.commit()
-    connection.close()
+    output = db.fetch_records()
 
     result={}
 
