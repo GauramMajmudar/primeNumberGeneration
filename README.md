@@ -6,7 +6,7 @@ Files included in this repository:
 3. main.py
 4. db.py
 5. entry.db
-6. video file
+6. method.py
 
 prime.py: This file has the main logic of the program.
 
@@ -18,8 +18,7 @@ main.py: This is a flask file which is developed for API purpose. It contains ma
 
 entry.db: This is the database file that is created to store records.
 
-NOTE: There is a video file, if your system does not support python or flask or you want to see the working program without python or flask installation.
-The video file is of the previous version.
+method.py: This file has the same functions as prime.py but have little modified to efficiently use in the main.py.
 
 Install Python: https://www.python.org/downloads/
 
