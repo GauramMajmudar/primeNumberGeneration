@@ -1,4 +1,4 @@
-# primeNumberGeneration (python and flask) [Last updated on: 30/7/2021]
+# primeNumberGeneration (python and flask) [Last updated on: 31/7/2021]
 
 Files included in this repository:
 1. prime.py
